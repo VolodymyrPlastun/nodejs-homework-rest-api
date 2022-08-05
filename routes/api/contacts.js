@@ -1,6 +1,9 @@
 const express = require('express')
-const createError = require('http-errors');
+const {NotFound, BadRequest} = require('http-errors');
 const Joi = require('joi');
+const {listContacts, getContactById, removeContact, addContact, updateContact} = require('../../models/contacts');
+
+const router = express.Router();
 
 const contactSchema = Joi.object({
   name: Joi.string()
@@ -11,10 +14,6 @@ const contactSchema = Joi.object({
   email: Joi.string().email({ minDomainSegments: 2, tlds: { allow: ['com', 'net'] } }).required(),
   phone: Joi.string().min(3).max(20).required(),
 })
-
-const router = express.Router();
-
-const {listContacts, getContactById, removeContact, addContact, updateContact} = require('../../models/contacts');
 
 router.get('/', async (req, res, next) => {
   try {
@@ -36,7 +35,7 @@ router.get('/:id', async (req, res, next) => {
     const {id} = req.params;
     const result = await getContactById(id);
     if(!result) {
-      throw createError(404, `Contact with id ${id} not found`)
+      throw new NotFound(`Contact with id ${id} not found`)
     }
     res.json({ status: 'success',
     code: 200,
@@ -53,7 +52,7 @@ router.post('/', async (req, res, next) => {
   try {
     const {error} = contactSchema.validate(req.body);
     if(error) {
-      throw createError(400, "missing required name field")
+      throw new BadRequest("missing required name field")
     }
     const result = await addContact(req.body)
     res.status(201).json({
@@ -74,7 +73,7 @@ try {
   const { id } = req.params;
   const result = await removeContact(id);
   if(!result) {
-    throw createError(404, `Contact with id ${id} not found`)
+    throw new NotFound(`Contact with id ${id} not found`)
   }
   res.json({ 
     status: 'success',
@@ -93,12 +92,12 @@ router.put('/:id', async (req, res, next) => {
   try {
     const {error} = contactSchema.validate(req.body);
     if(error) {
-      throw createError(400, "missing fields")
+      throw new BadRequest("missing fields")
     }
     const {id} = req.params;
     const result = await updateContact(id, req.body);
     if(!result) {
-      throw createError(404, `Contact with id ${id} not found`)
+      throw new NotFound(`Contact with id ${id} not found`)
     }
     res.json({ 
       status: 'success',
