@@ -1,4 +1,4 @@
-const {Contact, joiContactSchema} = require('../models');
+const {Contact, joiContactSchema} = require('../../models');
 const createError = require('http-errors');
 
 const updateContact = async (req, res, next) => {
