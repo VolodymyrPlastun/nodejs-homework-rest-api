@@ -1,21 +1,30 @@
-const express = require('express')
-const {getContacts, getContactById, addContact, removeContact, updateContact, updateStatusContact, getContactsByFavorite} = require('../../controller');
-const auth = require('../../middlewares/auth');
+const express = require("express");
+const {
+  getContacts,
+  getContactById,
+  addContact,
+  removeContact,
+  updateContact,
+  updateStatusContact,
+} = require("../../controller");
+const { auth, validation, wrapper } = require("../../middlewares");
+const { joiContactSchema, favoriteJoiSchema } = require("../../models");
 const router = express.Router();
 
+router.get("/", auth, wrapper(getContacts));
 
-router.get('/', auth, getContacts);
+router.get("/:id", auth, wrapper(getContactById));
 
-router.get('/:id', auth, getContactsByFavorite);
+router.post("/", auth, validation(joiContactSchema), wrapper(addContact));
 
-router.get('/:id', getContactById)
+router.delete("/:id", wrapper(removeContact));
 
-router.post('/', auth, addContact)
+router.put("/:id", validation(joiContactSchema), wrapper(updateContact));
 
-router.delete('/:id', removeContact)
+router.patch(
+  "/:id/favorite",
+  validation(favoriteJoiSchema),
+  wrapper(updateStatusContact)
+);
 
-router.put('/:id', updateContact)
-
-router.patch('/:id/favorite', updateStatusContact);
-
-module.exports = router
+module.exports = router;
