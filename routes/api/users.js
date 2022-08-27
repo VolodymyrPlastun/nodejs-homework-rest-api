@@ -5,8 +5,9 @@ const {
   currentUser,
   logout,
   updateSubscription,
+  updateAvatar
 } = require("../../controller");
-const { auth, validation, wrapper } = require("../../middlewares");
+const { auth, validation, wrapper, upload } = require("../../middlewares");
 const {
   joiLoginSchema,
   joiUserSchema,
@@ -29,5 +30,8 @@ router.patch(
   validation(joiSubscriptionSchema),
   wrapper(updateSubscription)
 );
+
+router.patch('/avatars', auth, upload.single("avatar"), wrapper(updateAvatar));
+
 
 module.exports = router;

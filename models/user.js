@@ -19,6 +19,10 @@ const userRegisterSchema = Schema({
         token: {
           type: String,
           default: null,
+        },
+        avatarURL: {
+          type: String,
+          required: [true, 'Avatar URL is required'],
         }
 }, {versionKey: false, timestamps: true})
 
