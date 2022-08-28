@@ -9,6 +9,7 @@ const login = require("./users/login");
 const currentUser = require("./users/current");
 const logout = require("./users/logout");
 const updateSubscription = require("./users/updateSubscription");
+const updateAvatar = require("./users/updateAvatar");
 
 module.exports = {
   getContacts,
@@ -22,4 +23,5 @@ module.exports = {
   currentUser,
   logout,
   updateSubscription,
+  updateAvatar
 };
