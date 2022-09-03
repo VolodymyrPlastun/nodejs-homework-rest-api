@@ -1,7 +1,7 @@
 const { User } = require("../../models");
 const {NotFound} = require("http-errors");
 
-const updateSubscription = async (req, res, next) => {
+const updateSubscription = async (req, res) => {
   const { _id } = req.user;
   const { subscription } = req.body;
 
